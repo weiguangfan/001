@@ -354,6 +354,7 @@ MySQL数据库操作指南
     .右连接查询
     .自连接查询
     .多表连接查询
+    .任何表查询结果 都可以作为条件
 
     1.内连接查询语法格式:
     select 字段 from 表1 inner join 表2 on 表1.字段1 = 表2.字段2
@@ -410,6 +411,15 @@ MySQL数据库操作指南
         `hire_date` date NOT NULL,
         PRIMARY KEY (`emp_no`));
     select last_name,first_name,dept_name from employees as e left join (select emp_no,dept_name from dept_emp as d1 left join departments as d2  on d1.dept_no =d2.dept_no) as f on e.emp_no = f.emp_no ;
+    5.任何表查询结果 都可以作为条件
+        查找员工编号emp_no为10001其自入职以来的薪水salary涨幅(总共涨了多少)growth(可能有多次涨薪，没有降薪)
+        CREATE TABLE `salaries` (
+        `emp_no` int(11) NOT NULL,
+        `salary` int(11) NOT NULL,
+        `from_date` date NOT NULL,
+        `to_date` date NOT NULL,
+        PRIMARY KEY (`emp_no`,`from_date`));
+        select (select salary from salaries where emp_no = 10001 order by from_date desc limit 0,1) -(select salary from salaries where emp_no = 10001 order by from_date  limit 0,1)as growth;
 [6]主查询和子查询的关系:
     .子查询是嵌入到主查询中
     .子查询是辅助主查询的,要么充当条件,要么充当数据源
