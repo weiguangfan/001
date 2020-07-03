@@ -213,6 +213,7 @@ MySQL数据库操作指南
 (9)distinct关键字
     distinct可以去除重复数据行
     select distinct 列1,... from 表名;
+    当DISTINCT应用到多个字段时，其应用范围是其后面的所有字段，而不是紧挨它的一个字段
 ******************************************************************
 <1>where语句支持的运算符:
 
@@ -352,6 +353,7 @@ MySQL数据库操作指南
     .左连接查询
     .右连接查询
     .自连接查询
+    .多表连接查询
 
     1.内连接查询语法格式:
     select 字段 from 表1 inner join 表2 on 表1.字段1 = 表2.字段2
@@ -386,7 +388,28 @@ MySQL数据库操作指南
     
     说明:
     自连接查询必须对表起别名
-
+    5.多表连接查询：
+    将其中的两个表连接后作为一个表，和第三表连接；
+    查找所有员工的last_name和first_name以及对应的dept_name，也包括暂时没有分配部门的员工
+        CREATE TABLE `departments` (
+        `dept_no` char(4) NOT NULL,
+        `dept_name` varchar(40) NOT NULL,
+        PRIMARY KEY (`dept_no`));
+        CREATE TABLE `dept_emp` (
+        `emp_no` int(11) NOT NULL,
+        `dept_no` char(4) NOT NULL,
+        `from_date` date NOT NULL,
+        `to_date` date NOT NULL,
+        PRIMARY KEY (`emp_no`,`dept_no`));
+        CREATE TABLE `employees` (
+        `emp_no` int(11) NOT NULL,
+        `birth_date` date NOT NULL,
+        `first_name` varchar(14) NOT NULL,
+        `last_name` varchar(16) NOT NULL,
+        `gender` char(1) NOT NULL,
+        `hire_date` date NOT NULL,
+        PRIMARY KEY (`emp_no`));
+    select last_name,first_name,dept_name from employees as e left join (select emp_no,dept_name from dept_emp as d1 left join departments as d2  on d1.dept_no =d2.dept_no) as f on e.emp_no = f.emp_no ;
 [6]主查询和子查询的关系:
     .子查询是嵌入到主查询中
     .子查询是辅助主查询的,要么充当条件,要么充当数据源
