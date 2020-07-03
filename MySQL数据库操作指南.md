@@ -509,7 +509,7 @@ name varchar(40) not null) select brand_name as name from goods group by brand_n
 	
     说明：alter table 语句，可以同时修改多个字段信息,多个修改字段之间使用逗号分隔
     
-    .alter table goods change cate_name cate_id int not null,change brand_name brand_id int not null;
+    .alter table goods change cate_name c********ate_id int not null,change brand_name brand_id int not null;
     
 {5}事务
     1.查看MySQL数据库支持的表的存储引擎:
